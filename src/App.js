@@ -5,7 +5,7 @@ import Buttons from './Buttons'
 function App() {
   return (
     <>
-    <SearchForm/>
+    <SearchForm />
     <Buttons />
     <Stories />
     </>

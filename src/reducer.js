@@ -14,21 +14,20 @@ const reducer = (state, action) => {
         isLoading: true,
       }
     case SET_STORIES:
-      const { hits, page, nbPages } = action.payload
+      const { hits, nbPages } = action.payload
       return {
         ...state,
         hits,
-        page,
         nbPages,
         isLoading: false,
       }
     case REMOVE_STORY:
-      const newStories = state.hits.filter(
+      const remainingStories = state.hits.filter(
         (story) => story.objectID !== action.payload
       )
       return {
         ...state,
-        hits: newStories,
+        hits: remainingStories,
       }
     case HANDLE_SEARCH:
       return {
@@ -37,6 +36,16 @@ const reducer = (state, action) => {
         page: 0,
       }
     case HANDLE_PAGE:
+      if (action.payload === 'dec') {
+        let prevPage = state.page - 1
+        if (prevPage < 0) {
+          prevPage = state.nbPages - 1
+        }
+        return {
+          ...state,
+          page: prevPage,
+        }
+      }
       if (action.payload === 'inc') {
         let nextPage = state.page + 1
         if (nextPage > state.nbPages - 1) {
@@ -44,26 +53,12 @@ const reducer = (state, action) => {
         }
         return {
           ...state,
-          page: nextPage
+          page: nextPage,
         }
       }
-        if (action.payload === 'dec') {
-          let prevPage = state.page - 1
-          if (prevPage < 0) {
-            prevPage = state.nbPages - 1
-          }
-          return {
-            ...state,
-            page: prevPage
-          }
-        }
-      
-      return {
-        ...state,
-      }
+      break
     default:
-      throw new Error(`no matching "${action.type}" type`)
+      throw new Error(`no matching action type "${action.type}" found`)
   }
 }
-
 export default reducer
